@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JavaScriptLibraryMappings">
+    <excludedPredefinedLibrary name="themes/keycloak-preview/account/resources/node_modules" />
+    <excludedPredefinedLibrary name="themes/keycloak/common/resources/node_modules" />
+    <excludedPredefinedLibrary name="themes/lojing/common/resources/node_modules" />
+    <excludedPredefinedLibrary name="themes/pcss/common/resources/node_modules" />
+    <excludedPredefinedLibrary name="themes/stt/common/resources/node_modules" />
+    <excludedPredefinedLibrary name="themes/sttNew/common/resources/node_modules" />
+  </component>
+</project>
