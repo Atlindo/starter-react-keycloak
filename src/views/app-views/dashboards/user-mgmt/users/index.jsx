@@ -41,7 +41,6 @@ export const Page = () => {
   });
   const [editingKey, setEditingKey] = useState(null);
 
-  const isEditing = record => record?.id === editingKey;
   const edit = record => {
     form.setFieldsValue({
       ...record,

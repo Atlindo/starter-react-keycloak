@@ -1,22 +1,77 @@
 import { useNavigate } from 'react-router-dom';
 import { useKeycloak } from '@react-keycloak/web';
 import React, { useEffect, useState } from 'react';
-import { Button, Card, Flex, message, Table } from 'antd';
+import {Button, Card, Drawer, Flex, message, Table} from 'antd';
 import moment from 'moment/moment';
-import { DeleteOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
+import {DeleteOutlined, EditOutlined, PlusOutlined, ReloadOutlined} from '@ant-design/icons';
 import KeycloakInterceptor from '../../../../../../auth/keycloak.interceptor';
 import { APP_PREFIX_PATH } from '../../../../../../configs/AppConfig';
 
 function ClientRegistrationIndex() {
   const navigate = useNavigate();
   const { keycloak } = useKeycloak();
+  const [visible, setVisible] = useState(false);
+
   const [loading, setLoading] = useState(false);
   const [loadings, setLoadings] = useState([]);
   const [data, setData] = useState([]);
   const [params, setParams] = useState({
     first: 0,
     max: 10,
+    type: 'org.keycloak.services.clientregistration.policy.ClientRegistrationPolicy'
   });
+
+  /**
+   * @type {[{visible: boolean, dataIndex: string, title: string},{visible: boolean, dataIndex: string, title: string},{visible: boolean, dataIndex: string, title: string},{visible: boolean, dataIndex: string, title: string, render((Date|number)): *|string|string},{visible: boolean, dataIndex: string, title: string, render((Date|number)): *|string|string},null]}
+   */
+  const columns = [
+    {
+      visible: false,
+      title: 'ID',
+      dataIndex: 'id',
+    },
+    {
+      visible: true,
+      title: 'Name',
+      dataIndex: 'name',
+    },
+    {
+      visible: true,
+      title: 'Provider ID',
+      dataIndex: 'providerId',
+    },
+    {
+      visible: true,
+      width: '140px',
+      dataIndex: 'id',
+      /**
+       * @param {Date|number} _
+       * @param {any} val
+       * @param {number} index
+       */
+      render(_, val, index) {
+        return (
+          <Flex align="center" gap={10}>
+            <Button
+              icon={<EditOutlined />}
+              shape="circle"
+              size="small"
+              loading={loadings[index] ?? val?.deletedAt ?? false}
+            />
+            <Button
+              icon={<DeleteOutlined />}
+              ghost
+              danger
+              shape="circle"
+              size="small"
+              onClick={() => _onDelete(_, index)}
+              loading={loadings[index] ?? val?.deletedAt ?? false}
+            />
+          </Flex>
+        );
+      },
+    },
+  ];
 
   /**
    * @param {string} id
@@ -32,9 +87,8 @@ function ClientRegistrationIndex() {
         duration: 10,
       })
       .then(r => r);
-    KeycloakInterceptor.delete(`/admin/realms/${keycloak.realm}/clients-initial-access/${id}`)
+    KeycloakInterceptor.delete(`/admin/realms/${keycloak.realm}/components/${id}`)
       .then(response => {
-        console.log({ response });
         setIndexLoading(index, false);
         setData(prevState => [
           ...prevState.map(child => ({
@@ -66,6 +120,10 @@ function ClientRegistrationIndex() {
       });
   }
 
+  /**
+   * @param {number} index
+   * @param {boolean} value
+   */
   const setIndexLoading = (index, value = true) => {
     setLoadings(prevLoadings => {
       prevLoadings[index] = value;
@@ -73,93 +131,38 @@ function ClientRegistrationIndex() {
     });
   };
 
-  const columns = [
-    {
-      visible: true,
-      title: 'ID',
-      dataIndex: 'id',
-    },
-    {
-      visible: true,
-      title: 'Count',
-      dataIndex: 'count',
-    },
-    {
-      visible: true,
-      title: 'Remaining',
-      dataIndex: 'remainingCount',
-    },
-    {
-      visible: true,
-      title: 'Created At',
-      dataIndex: 'timestamp',
-      /**
-       * @param {Date|number} _
-       */
-      render(_) {
-        return moment.unix(_).isValid() ? moment.unix(_).format('DD MMMM YYYY HH:mm A') : '-';
-      },
-    },
-    {
-      visible: true,
-      title: 'Expiration',
-      dataIndex: 'expiration',
-      /**
-       * @param {Date|number} _
-       */
-      render(_) {
-        return moment.unix(_).isValid() ? moment.unix(_).format('DD MMMM YYYY HH:mm A') : '-';
-      },
-    },
-    {
-      visible: true,
-      title: 'Action',
-      dataIndex: 'id',
-      /**
-       * @param {Date|number} _
-       * @param {any} val
-       * @param {number} index
-       */
-      render(_, val, index) {
-        return (
-          <Button
-            icon={<DeleteOutlined />}
-            ghost
-            danger
-            onClick={() => _onDelete(_, index)}
-            loading={loadings[index] ?? val?.deletedAt ?? false}
-          />
-        );
-      },
-    },
-  ];
-
+  /**
+   * @private
+   */
   function _onRefresh() {
     setParams(prevState => ({ ...prevState }));
   }
 
+  function _onOpenCreate(){
+    setVisible(true);
+  }
+
   useEffect(() => {
     setLoading(true);
-    KeycloakInterceptor.get(`/admin/realms/${keycloak.realm}/clients-initial-access`, {
+    KeycloakInterceptor.get(`/admin/realms/${keycloak.realm}/components`, {
       params,
     })
       .then(response => {
-        setData(Array.isArray(response?.data) ? response?.data : []);
+        setData(Array.isArray(response?.data) ? response?.data.filter((child)=> child?.subType === 'anonymous') : []);
         setLoading(false);
       })
       .catch(err => {
-        console.log({ err });
         setData([]);
         setLoading(false);
       });
   }, [params]);
 
   return (
-    <>
+    <React.Fragment>
       <Card
         title="Overview"
         extra={
-          <>
+          <React.Fragment>
             <Flex align="center" gap={10}>
               <Button
                 loading={loading}
@@ -172,9 +175,7 @@ function ClientRegistrationIndex() {
                 Refresh
               </Button>
               <Button
-                onClick={function () {
-                  navigate(`${APP_PREFIX_PATH}/keycloak/clients/create`);
-                }}
+                onClick={_onOpenCreate}
                 type="primary"
                 shape="round"
                 icon={<PlusOutlined />}
@@ -182,7 +183,7 @@ function ClientRegistrationIndex() {
                 Create
               </Button>
             </Flex>
-          </>
+          </React.Fragment>
         }
       >
         <Table
@@ -195,7 +196,11 @@ function ClientRegistrationIndex() {
           dataSource={data}
         />
       </Card>
-    </>
+
+      <Drawer title="Create Client Registration">
+        <p>testing</p>
+      </Drawer>
+    </React.Fragment>
   );
 }
 
