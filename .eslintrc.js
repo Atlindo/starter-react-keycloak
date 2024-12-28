@@ -41,6 +41,7 @@ module.exports = {
     },
   },
   rules: {
+    'react/jsx-fragments': 0,
     'no-bitwise': 0,
     'no-empty-pattern': 1,
     'array-callback-return': 0,
