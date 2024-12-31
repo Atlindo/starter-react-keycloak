@@ -33,42 +33,63 @@ export const protectedRoutes = [
   {
     key: 'users.default',
     path: `${APP_PREFIX_PATH}/users`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/user-mgmt/users/index')),
   },
   {
     key: 'users.show',
     path: `${APP_PREFIX_PATH}/users/:uuid`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/user-mgmt/users/show')),
   },
   {
     key: 'users.amend.access',
     path: `${APP_PREFIX_PATH}/users/:uuid/amend/access`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/user-mgmt/users/access.amend')),
   },
   {
     key: 'keycloak.clients.index',
     path: `${APP_PREFIX_PATH}/keycloak/clients`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/keycloak/clients/index')),
   },
   {
     key: 'keycloak.clients.setting',
     path: `${APP_PREFIX_PATH}/keycloak/clients/:uuid/setting`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/keycloak/clients/setting')),
   },
   {
     key: 'keycloak.clients.create',
     path: `${APP_PREFIX_PATH}/keycloak/clients/create`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/keycloak/clients/create')),
   },
-
   {
     key: 'keycloak.clients.index',
     path: `${APP_PREFIX_PATH}/keycloak/clients/scope`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/keycloak/clients/scope/index')),
   },
+
+  {
+    key: 'keycloak.group.index',
+    path: `${APP_PREFIX_PATH}/keycloak/groups`,
+    // eslint-disable-next-line import/no-unresolved
+    component: React.lazy(() => import('views/app-views/dashboards/keycloak/groups/index')),
+  },
+  {
+    key: 'keycloak.group.show',
+    path: `${APP_PREFIX_PATH}/keycloak/groups/:uuid`,
+    // eslint-disable-next-line import/no-unresolved
+    component: React.lazy(() => import('views/app-views/dashboards/keycloak/groups/show')),
+  },
+
   {
     key: 'dashboard.account.device',
     path: `${APP_PREFIX_PATH}/devices`,
+    // eslint-disable-next-line import/no-unresolved
     component: React.lazy(() => import('views/app-views/dashboards/account/device')),
   },
 ];

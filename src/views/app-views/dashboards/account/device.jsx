@@ -8,6 +8,7 @@ import KeycloakInterceptor from '../../../../auth/keycloak.interceptor';
 import PageHeaderAlt from '../../../../components/layout-components/PageHeaderAlt';
 import TheContainer from '../../../../components/util-components/Container/TheContainer';
 import Loading from '../../../../components/shared-components/Loading';
+import AccountKeycloakService from '../../../../services/keycloak/account.keycloak.service';
 
 const Page = () => {
   const { keycloak, initialized } = useKeycloak();
@@ -16,16 +17,15 @@ const Page = () => {
   useEffect(() => {
     if (keycloak?.authenticated && initialized) {
       setLoading(true);
-      KeycloakInterceptor.get(`/realms/${keycloak.realm}/account/sessions/devices`)
-        .then(response => {
-          console.log({ response });
-          setData(response?.data ?? []);
+      new AccountKeycloakService()
+        .getSessionDevice({})
+        .then((response)=> {
+          setData(response ?? []);
           setLoading(false);
         })
-        .catch(err => {
+        .catch(()=> {
           setLoading(false);
           setData([]);
-          console.log({ err });
         });
     }
   }, [initialized, keycloak]);

@@ -20,6 +20,8 @@
   "sidenav.dashboard.keycloak.realm.events": "Events",
   "sidenav.dashboard.keycloak.realm.sessions": "Sessions",
 
+  "sidenav.dashboard.keycloak.groups": "Groups",
+
   "sidenav.dashboard.keycloak.client": "Clients",
   "sidenav.dashboard.keycloak.client.index": "Overview Clients",
   "sidenav.dashboard.keycloak.client.access": "Initial Access",

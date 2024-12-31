@@ -5,6 +5,7 @@ import { TEMPLATE, NAV_TYPE_TOP, SIDE_NAV_COLLAPSED_WIDTH, SIDE_NAV_WIDTH } from
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { toggleCollapsedNav, onMobileNavToggle } from 'store/slices/themeSlice';
 import utils from 'utils';
+import {useKeycloak} from '@react-keycloak/web';
 import Logo from '../Logo';
 import NavProfile from '../NavProfile';
 import Header from './Header';
@@ -12,9 +13,13 @@ import HeaderWrapper from './HeaderWrapper';
 import Nav from './Nav';
 import NavEdge from './NavEdge';
 import NavItem from '../NavItem';
+import KeycloakService from '../../../services/keycloak/keycloak.service';
 
 export const HeaderNav = props => {
   const { isMobile } = props;
+  const { keycloak , initialized} = useKeycloak();
+  const { auth } = useSelector((state) => state);
+  const [show, setShow] = useState(false);
 
   const [searchActive, setSearchActive] = useState(false);
 
@@ -65,6 +70,23 @@ export const HeaderNav = props => {
       onSearchClose();
     }
   });
+
+  useEffect(()=> {
+    if(keycloak.authenticated && initialized && auth && auth?.isAuth ){
+      // setShow(true);
+      console.log(keycloak);
+      new KeycloakService()
+        .whoAmI({
+          currentRealm: keycloak.realm
+        }, keycloak.idToken)
+        .then((response)=> {
+          console.log({ response});
+        })
+        .catch((err)=> {
+          console.log({err});
+        });
+    }
+  },[keycloak, initialized, auth]);
 
   return (
     <Header isDarkTheme={isDarkTheme} headerNavColor={headerNavColor || navBgColor}>

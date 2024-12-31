@@ -81,6 +81,15 @@ const dashBoardNavTree = [
         submenu: [],
       },
       {
+        roles: ['admin'],
+        key: 'keycloak.groups',
+        path: `${APP_PREFIX_PATH}/keycloak/groups`,
+        title: 'sidenav.dashboard.keycloak.groups',
+        icon: TeamOutlined,
+        breadcrumb: true,
+        submenu: [],
+      },
+      {
         key: 'keycloak.realms',
         path: `${APP_PREFIX_PATH}/keycloak/realm`,
         title: 'sidenav.dashboard.keycloak.realm',

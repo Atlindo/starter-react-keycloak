@@ -16,11 +16,10 @@ export function* signIn() {
        */
       const response = yield call(() => {
         return new Promise(resolve => {
-          resolve(KeycloakInterceptor.get(`/realms/${KEYCLOAK_REALM}/protocol/openid-connect/userinfo`));
+          resolve(KeycloakInterceptor.get(`/realms/${KEYCLOAK_REALM}/protocol/openid-connect/connect`));
         });
       });
 
-      console.log({ response });
       if (response?.code === 'SUCCESS_OK' && response.data?.access_token) {
         const search = new URLSearchParams(window.location.search);
         localStorage.setItem(AUTH_ACC_TOKEN, response.data?.access_token);

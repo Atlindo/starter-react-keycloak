@@ -102,6 +102,7 @@ const Layouts = ({ _userLoad }) => {
       _userLoad();
     }
   }, [initialized, keycloak]);
+
   return (
     <ConfigProvider
       theme={{

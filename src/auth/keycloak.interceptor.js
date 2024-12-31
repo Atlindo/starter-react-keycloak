@@ -12,6 +12,7 @@ const KeycloakInterceptor = axios.create({
 });
 
 KeycloakInterceptor.interceptors.response.use(
+  // eslint-disable-next-line func-names
   function (res) {
     return new Promise((resolve, reject) => {
       if (res?.data?.error === 'Unauthorized') {
@@ -21,7 +22,11 @@ KeycloakInterceptor.interceptors.response.use(
       }
     });
   },
-  function () {}
+  function (error) {
+    return new Promise((resolve, reject) => {
+      resolve(error?.response);
+    });
+  }
 );
 
 export default KeycloakInterceptor;

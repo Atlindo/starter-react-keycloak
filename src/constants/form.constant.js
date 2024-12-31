@@ -1,0 +1,5 @@
+export const FORM_CONSTANT = {
+  READONLY: 'READONLY',
+  CREATE: 'CREATE',
+  UPDATE: 'UPDATE',
+};

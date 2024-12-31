@@ -41,6 +41,7 @@ module.exports = {
     },
   },
   rules: {
+    'import/no-extraneous-dependencies': 0,
     'react/jsx-fragments': 0,
     'no-bitwise': 0,
     'no-empty-pattern': 1,

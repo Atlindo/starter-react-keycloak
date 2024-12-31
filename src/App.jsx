@@ -16,9 +16,16 @@ const themes = {
 };
 
 function App() {
+  const onKeycloakEvent = (event, error) => {
+    console.log('Keycloak event:', event, error);
+  };
+
   return (
     <div className="App">
-      <ReactKeycloakProvider authClient={keycloak}>
+      <ReactKeycloakProvider
+        authClient={keycloak}
+        onEvent={onKeycloakEvent}
+      >
         <Provider store={store}>
           <BrowserRouter history={history}>
             <ThemeSwitcherProvider
